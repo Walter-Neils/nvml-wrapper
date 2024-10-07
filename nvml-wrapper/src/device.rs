@@ -4739,6 +4739,29 @@ impl<'nvml> Device<'nvml> {
         }
     }
 
+    #[cfg(target_os = "linux")]
+    pub fn set_gpc_clock_variable_frequency_offset(
+        &self,
+        clock_offset_hz: i32,
+    ) -> Result<(), NvmlError> {
+        let sym = nvml_sym(self.nvml.lib.nvmlDeviceSetGpcClkVfOffset.as_ref())?;
+
+        unsafe {
+            nvml_try(sym(self.device, clock_offset_hz))?;
+            Ok(())
+        }
+    }
+
+    #[cfg(target_os = "linux")]
+    pub fn set_mem_clock_variable_frequency_offset(&self, offset: i32) -> Result<(), NvmlError> {
+        let sym = nvml_sym(self.nvml.lib.nvmlDeviceSetMemClkVfOffset.as_ref())?;
+
+        unsafe {
+            nvml_try(sym(self.device, offset))?;
+            Ok(())
+        }
+    }
+
     // Drain states
 
     /**
